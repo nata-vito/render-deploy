@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Solara • Assistente Repsol</title>
+  <meta name="description" content="Solara — assistente conversacional da Repsol para óleos, lubrificantes e fluidos automotivos." />
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="preconnect" href="https://unpkg.com" />
+
+  <style>
+    :root{
+      --bg: #0b0c10;
+      --card: #121318;
+      --muted: #9aa3b2;
+      --text: #e9edf5;
+      --brand: #ff6a00; /* toque quente e energético */
+      --ring: rgba(255,106,0,.25);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin:0;
+      font: 16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(255,106,0,.12), transparent 60%),
+        radial-gradient(1000px 600px at 10% 110%, rgba(255,106,0,.10), transparent 55%),
+        var(--bg);
+    }
+    .container{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 12px; padding: 12px 0 8px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;
+    }
+    .brand-mark{
+      width:36px; height:36px; border-radius:10px;
+      background: conic-gradient(from 210deg at 50% 50%, #ff6a00, #ffd000, #ff6a00);
+      box-shadow: 0 0 0 6px var(--ring), 0 6px 18px rgba(0,0,0,.35);
+    }
+    .brand-title{ font-weight:700; letter-spacing:.2px; }
+    main{
+      display:grid; gap:18px; margin-top: 10px; margin-bottom: 24px;
+      grid-template-columns: 1fr;
+    }
+    .card{
+      background: color-mix(in oklab, var(--card) 94%, black 6%);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      overflow: hidden;
+    }
+    .hero{
+      padding: 22px 22px 0;
+    }
+    .hero h1{
+      margin: 0 0 6px; font-size: clamp(20px, 3.5vw, 28px);
+    }
+    .hero p{
+      margin: 0 0 16px; color: var(--muted);
+    }
+    .widget-wrap{
+      padding: 0 22px 22px;
+    }
+
+    /* Área do widget — ocupa bem o viewport com responsividade */
+    .widget-slot{
+      display: grid;
+      place-items: center;
+      width: 100%;
+      min-height: min(80vh, 900px);
+      /* fallback visual */
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding: 10px;
+    }
+    elevenlabs-convai{
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      border: none;
+    }
+
+    .hint{
+      font-size: 14px; color: var(--muted);
+      display:flex; align-items:center; gap:8px; margin-top: 10px;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 6px 10px; border-radius: 999px;
+      border: 1px dashed rgba(255,255,255,.12);
+      background: rgba(255,255,255,.02);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    footer{
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      padding: 8px 0 12px; color: var(--muted); font-size: 14px;
+    }
+    a { color: #ffd000; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Responsivo extra para telas muito pequenas */
+    @media (max-width: 420px){
+      .widget-slot{ min-height: 75vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header role="banner" aria-label="Cabeçalho do site">
+      <a class="brand" href="./" aria-label="Solara — Assistente Repsol">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-title">Solara • Assistente Repsol</span>
+      </a>
+      <span class="badge" aria-label="Status do serviço">
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><circle cx="5" cy="5" r="5" fill="#29e17e"/></svg>
+        Online
+      </span>
+    </header>
+
+    <main id="app" role="main">
+      <section class="card hero" aria-label="Apresentação">
+        <h1>Converse com a Solara</h1>
+        <p>A Solara é o atendente conversacional da Repsol, pronta para ajudar com óleos, lubrificantes e fluidos para carros, motos, pesados e EV — além de informações institucionais.</p>
+      </section>
+
+      <section class="card widget-wrap" aria-label="Widget de conversa">
+        <div class="widget-slot" id="widget-slot">
+          <!-- Widget ElevenLabs -->
+          <elevenlabs-convai agent-id="agent_8601k2zk8ndkepnap4gewwbtb9jk"></elevenlabs-convai>
+          <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+
+          <!-- Fallback leve se o widget demorar a carregar -->
+          <noscript>
+            <p>Ative o JavaScript para iniciar a conversa com a Solara.</p>
+          </noscript>
+        </div>
+        <div class="hint">
+          Dica: permita acesso ao microfone do navegador para uma experiência completa.
+        </div>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <span>© <span id="year"></span> Repsol • Projeto demonstrativo</span>
+      <span>Privacidade: o uso do widget segue os termos da ElevenLabs.</span>
+    </footer>
+  </div>
+
+  <script>
+    // Atualiza o ano automaticamente
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Pequena melhoria de UX: se o custom element estiver pronto, adiciona uma borda de foco
+    (function () {
+      const slot = document.getElementById('widget-slot');
+      function ready() { slot.style.boxShadow = "0 0 0 6px var(--ring)"; setTimeout(()=>slot.style.boxShadow="none", 900); }
+      if (customElements && customElements.whenDefined) {
+        customElements.whenDefined('elevenlabs-convai').then(ready).catch(()=>{});
+      }
+    })();
+  </script>
+</body>
+</html>
