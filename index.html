@@ -7,6 +7,13 @@
   <meta name="description" content="Solara — assistente conversacional da Repsol para óleos, lubrificantes e fluidos automotivos." />
   <meta name="theme-color" content="#0a0a0a" />
   <link rel="preconnect" href="https://unpkg.com" />
+
+  <!-- FAVICONS (usa o SVG em assets/logo-repsol.svg) -->
+  <link rel="icon" type="image/svg+xml" href="assets/logo-repsol.svg">
+  <!-- Fallbacks opcionais (mantidos caso queira compatibilidade ampla) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/logo-repsol.svg">
+  <link rel="manifest" href="/site.webmanifest">
+
   <style>
     :root{
       --bg:#0b0c10; --muted:#9aa3b2; --text:#e9edf5;
@@ -34,10 +41,11 @@
       padding:8px 0 6px;
     }
     .brand{ display:flex; align-items:center; gap:12px; color:inherit; text-decoration:none; }
-    .brand-mark{
-      width:36px; height:36px; border-radius:10px;
-      background:conic-gradient(from 210deg at 50% 50%, var(--brand), var(--brand-2), var(--brand));
-      box-shadow:0 6px 18px rgba(0,0,0,.35);
+    /* novo: logo SVG externo */
+    .brand-logo{
+      height:36px; width:auto; display:block;
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,.35));
+      pointer-events:none; /* evita cliques no logo */
     }
     .brand-title{ font-weight:700; letter-spacing:.2px; }
 
@@ -62,14 +70,14 @@
 
     /* Rodapé “glass” sempre no pé */
     .footer-wrap{
-      backdrop-filter:blur(6px);
-      background:linear-gradient(180deg, rgba(18,19,24,.6), rgba(18,19,24,.35));
-      border-top:1px solid var(--glass);
-      box-shadow:0 -8px 24px rgba(0,0,0,.35);
+    background: rgba(0,0,0,0.12);
+    backdrop-filter: none;
+    border-top: 0;
+    box-shadow: none;
     }
     .footer-content{
-      display:flex; justify-content:space-between; align-items:center; gap:12px;
-      color:var(--muted); font-size:14px; padding:14px 0 26px;
+    color: var(--muted);
+    padding: 14px 0 26px;
     }
     a{ color:#ffd000; text-decoration:none; } a:hover{ text-decoration:underline; }
 
@@ -116,8 +124,9 @@
     <div class="container">
       <header role="banner" aria-label="Cabeçalho do site">
         <a class="brand" href="./" aria-label="Solara — Assistente Repsol">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span class="brand-title">Solara • Assistente Repsol</span>
+          <!-- novo: uso do SVG como logo -->
+          <img class="brand-logo" src="assets/logo-repsol.svg" alt="Repsol" />
+          <span class="brand-title">Solara AI</span>
         </a>
         <span aria-label="Status do serviço" style="display:flex;align-items:center;gap:8px;color:#9ee6b1;">
           <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="5" fill="#29e17e"/></svg>
@@ -127,9 +136,9 @@
 
       <main id="app" role="main">
         <section class="hero" aria-label="Apresentação">
-          <h1>Converse com a Solara</h1>
+          <h1>Converse com a Solara AI</h1>
           <p>
-            Solara, uma atendente técnica confiável e eficiente da Repsol. Especialista em óleos, lubrificantes e fluidos automotivos (carros de passeio, motos, veículos pesados e EV), e também em dúvidas institucionais (história, estrutura, sustentabilidade).
+            Assistente conversacional da Repsol para dúvidas sobre óleos, lubrificantes e fluidos — carros, motos, veículos pesados e EV — além de informações institucionais. Clique no botão no canto inferior direito para iniciar.
           </p>
           <div class="chip-row" aria-label="Áreas de suporte">
             <span class="chip">Especificações OEM</span>
