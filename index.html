@@ -28,30 +28,25 @@
         var(--bg);
     }
 
-    /* ===== Fundo com o site embutido ===== */
-    .bg-embed{
+    /* ===== Background estático (imagem) ===== */
+    .bg{
       position: fixed; inset: 0; z-index: -1; overflow: hidden;
     }
-    .bg-embed iframe{
-      position: absolute; inset: 0;
-      width: 100vw; height: 100vh; border: 0;
-      pointer-events: none;             /* impede clique/scroll no fundo */
-      transform: scale(1.03);           /* leve zoom para cobrir sem barras */
-      filter: brightness(.35) saturate(.95) contrast(1.05); /* escurece p/ legibilidade */
-      transition: opacity .25s ease-out;
-      opacity: 0;                       /* fica visível só após load */
+    .bg picture, .bg img{ position: absolute; inset: 0; width:100%; height:100%; }
+    .bg img{
+      object-fit: cover;
+      filter: brightness(.35) saturate(.95) contrast(1.05);
+      pointer-events: none;
+      opacity: 0; transition: opacity .35s ease-out;
     }
-    .bg-embed.ready iframe{ opacity: 1; }
+    .bg.ready img{ opacity: 1; }
     .bg-veil{
       position: absolute; inset: 0; pointer-events: none;
       background:
         radial-gradient(1200px 600px at 80% -10%, rgba(255,106,0,.10), transparent 60%),
         radial-gradient(1000px 600px at 10% 110%, rgba(255,208,0,.08), transparent 55%);
     }
-    /* Em telas pequenas, esconda o iframe por performance/dados */
-    @media (max-width: 640px){
-      .bg-embed{ display:none; }
-    }
+    @media (max-width: 640px){ .bg{ display:none; } } /* economiza dados no mobile */
 
     /* ===== Layout ===== */
     .container{ max-width:1100px; margin:0 auto; padding:24px; }
@@ -72,14 +67,12 @@
       display:grid; gap:16px;
       padding: clamp(18px, 2.5vw, 28px);
       border-radius: 18px;
-      background: linear-gradient(180deg, rgba(18,19,24,.65), rgba(18,19,24,.35)); /* vidro escuro */
+      background: linear-gradient(180deg, rgba(18,19,24,.65), rgba(18,19,24,.35));
       border: 1px solid var(--glass);
       box-shadow: 0 12px 40px rgba(0,0,0,.45);
       backdrop-filter: blur(6px);
     }
-    .hero h1{
-      margin:0; font-size: clamp(22px, 4.2vw, 38px); line-height:1.2;
-    }
+    .hero h1{ margin:0; font-size: clamp(22px, 4.2vw, 38px); line-height:1.2; }
     .hero p{ margin:0; color:var(--muted); max-width: 70ch; }
 
     .chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
@@ -104,15 +97,24 @@
   </style>
 </head>
 <body>
-  <!-- Site de fundo (usa a URL fornecida) -->
-  <div class="bg-embed" id="bg" aria-hidden="true">
-    <iframe
-      id="bgFrame"
-      src="https://www.repsol.com/en/index.cshtml"
-      title="Repsol site background"
-      loading="lazy"
-      referrerpolicy="no-referrer">
-    </iframe>
+  <!-- Fundo com imagem estática -->
+  <div class="bg" id="bg">
+    <picture>
+      <!-- WebP preferencial -->
+      <source
+        type="image/webp"
+        srcset="
+          assets/Screenshot from 2025-08-18 21-39-43.png,
+          assets/Screenshot from 2025-08-18 21-39-43.png,
+          assets/Screenshot from 2025-08-18 21-39-43.png"
+        sizes="100vw" />
+      <!-- JPEG/PNG fallback (opcional) -->
+      <img id="bgImg"
+        src="assets/Screenshot from 2025-08-18 21-39-43.png"
+        alt=""
+        loading="eager"
+        decoding="async" />
+    </picture>
     <div class="bg-veil"></div>
   </div>
 
@@ -134,7 +136,6 @@
         <p>
           Assistente conversacional da Repsol para dúvidas sobre óleos, lubrificantes e fluidos — carros, motos, veículos pesados e EV — além de informações institucionais. Clique no botão no canto inferior direito para iniciar.
         </p>
-
         <div class="chip-row" aria-label="Áreas de suporte">
           <span class="chip">Especificações OEM</span>
           <span class="chip">ACEA / API / ILSAC</span>
@@ -161,19 +162,11 @@
     // Ano no rodapé
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Marca como "pronto" quando o iframe carrega; se não carregar (CSP/X-Frame),
-    // escondemos o container para não mostrar um bloco vazio.
+    // Fade-in do background quando a imagem carregar
     const bg = document.getElementById('bg');
-    const frame = document.getElementById('bgFrame');
-    let loaded = false;
-    frame.addEventListener('load', () => {
-      loaded = true;
-      bg.classList.add('ready');
-    });
-    // Fallback em 2.5s: se não carregou, some com o bg-embed
-    setTimeout(() => {
-      if (!loaded) bg.style.display = 'none';
-    }, 2500);
+    const img = document.getElementById('bgImg');
+    function ready(){ bg.classList.add('ready'); }
+    if (img.complete) ready(); else img.addEventListener('load', ready);
   </script>
 </body>
 </html>
