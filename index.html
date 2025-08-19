@@ -9,47 +9,26 @@
   <link rel="preconnect" href="https://unpkg.com" />
   <style>
     :root{
-      --bg: #0b0c10;
-      --muted: #9aa3b2;
-      --text: #e9edf5;
-      --brand: #ff6a00;
-      --brand-2:#ffd000;
-      --glass: rgba(255,255,255,.08);
+      --bg:#0b0c10; --muted:#9aa3b2; --text:#e9edf5;
+      --brand:#ff6a00; --brand-2:#ffd000; --glass:rgba(255,255,255,.08);
     }
-    *{ box-sizing: border-box; }
-    html, body{ height:100%; }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
-      margin:0;
-      color:var(--text);
-      font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans";
+      margin:0; color:var(--text);
+      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans";
       background:
         radial-gradient(1200px 600px at 80% -10%, rgba(255,106,0,.12), transparent 60%),
         radial-gradient(1000px 600px at 10% 110%, rgba(255,208,0,.10), transparent 55%),
         var(--bg);
     }
 
-    /* ===== Background estático (imagem) ===== */
-    .bg{
-      position: fixed; inset: 0; z-index: -1; overflow: hidden;
-    }
-    .bg picture, .bg img{ position: absolute; inset: 0; width:100%; height:100%; }
-    .bg img{
-      object-fit: cover;
-      filter: brightness(.35) saturate(.95) contrast(1.05);
-      pointer-events: none;
-      opacity: 0; transition: opacity .35s ease-out;
-    }
-    .bg.ready img{ opacity: 1; }
-    .bg-veil{
-      position: absolute; inset: 0; pointer-events: none;
-      background:
-        radial-gradient(1200px 600px at 80% -10%, rgba(255,106,0,.10), transparent 60%),
-        radial-gradient(1000px 600px at 10% 110%, rgba(255,208,0,.08), transparent 55%);
-    }
-    @media (max-width: 640px){ .bg{ display:none; } } /* economiza dados no mobile */
+    /* ===== Layout de página para manter o rodapé no pé ===== */
+    .page{ min-height:100svh; display:flex; flex-direction:column; }
+    .container{ max-width:1100px; margin:0 auto; padding:24px; width:100%; }
+    main{ padding:10px 0 18vh; } /* espaço p/ bolha do chat */
+    footer{ margin-top:auto; }   /* empurra o rodapé para baixo */
 
-    /* ===== Layout ===== */
-    .container{ max-width:1100px; margin:0 auto; padding:24px; }
     header{
       display:flex; align-items:center; justify-content:space-between; gap:12px;
       padding:8px 0 6px;
@@ -57,42 +36,61 @@
     .brand{ display:flex; align-items:center; gap:12px; color:inherit; text-decoration:none; }
     .brand-mark{
       width:36px; height:36px; border-radius:10px;
-      background: conic-gradient(from 210deg at 50% 50%, var(--brand), var(--brand-2), var(--brand));
-      box-shadow: 0 6px 18px rgba(0,0,0,.35);
+      background:conic-gradient(from 210deg at 50% 50%, var(--brand), var(--brand-2), var(--brand));
+      box-shadow:0 6px 18px rgba(0,0,0,.35);
     }
     .brand-title{ font-weight:700; letter-spacing:.2px; }
 
-    main{ padding: 10px 0 18vh; } /* espaço para a bolha do chat */
     .hero{
       display:grid; gap:16px;
-      padding: clamp(18px, 2.5vw, 28px);
-      border-radius: 18px;
-      background: linear-gradient(180deg, rgba(18,19,24,.65), rgba(18,19,24,.35));
-      border: 1px solid var(--glass);
-      box-shadow: 0 12px 40px rgba(0,0,0,.45);
-      backdrop-filter: blur(6px);
+      padding:clamp(18px,2.5vw,28px);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(18,19,24,.65), rgba(18,19,24,.35));
+      border:1px solid var(--glass);
+      box-shadow:0 12px 40px rgba(0,0,0,.45);
+      backdrop-filter:blur(6px);
     }
-    .hero h1{ margin:0; font-size: clamp(22px, 4.2vw, 38px); line-height:1.2; }
-    .hero p{ margin:0; color:var(--muted); max-width: 70ch; }
-
+    .hero h1{ margin:0; font-size:clamp(22px,4.2vw,38px); line-height:1.2; }
+    .hero p{ margin:0; color:var(--muted); max-width:70ch; }
     .chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
     .chip{
-      font-size: 12px; color:var(--text);
+      font-size:12px; color:var(--text);
       border:1px solid var(--glass);
-      background: rgba(255,255,255,.06);
-      border-radius:999px; padding:6px 10px; opacity:.95;
-      backdrop-filter: blur(2px);
+      background:rgba(255,255,255,.06);
+      border-radius:999px; padding:6px 10px; opacity:.95; backdrop-filter:blur(2px);
     }
 
-    footer{
-      color:var(--muted); font-size:14px; padding: 14px 0 26px;
+    /* Rodapé “glass” sempre no pé */
+    .footer-wrap{
+      backdrop-filter:blur(6px);
+      background:linear-gradient(180deg, rgba(18,19,24,.6), rgba(18,19,24,.35));
+      border-top:1px solid var(--glass);
+      box-shadow:0 -8px 24px rgba(0,0,0,.35);
+    }
+    .footer-content{
       display:flex; justify-content:space-between; align-items:center; gap:12px;
+      color:var(--muted); font-size:14px; padding:14px 0 26px;
     }
     a{ color:#ffd000; text-decoration:none; } a:hover{ text-decoration:underline; }
 
-    @media (max-width: 520px){
-      main{ padding-bottom: 22vh; }
-      .hero{ padding: 16px; }
+    /* ===== Background estático (imagem) ===== */
+    .bg{ position:fixed; inset:0; z-index:-1; overflow:hidden; }
+    .bg picture,.bg img{ position:absolute; inset:0; width:100%; height:100%; }
+    .bg img{
+      object-fit:cover; filter:brightness(.35) saturate(.95) contrast(1.05);
+      pointer-events:none; opacity:0; transition:opacity .35s ease-out;
+    }
+    .bg.ready img{ opacity:1; }
+    .bg-veil{
+      position:absolute; inset:0; pointer-events:none;
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(255,106,0,.10), transparent 60%),
+        radial-gradient(1000px 600px at 10% 110%, rgba(255,208,0,.08), transparent 55%);
+    }
+    @media (max-width:640px){ .bg{ display:none; } }
+    @media (max-width:520px){
+      main{ padding-bottom:22vh; }
+      .hero{ padding:16px; }
     }
   </style>
 </head>
@@ -100,55 +98,56 @@
   <!-- Fundo com imagem estática -->
   <div class="bg" id="bg">
     <picture>
-      <!-- WebP preferencial -->
-      <source
-        type="image/webp"
+      <!-- Se o arquivo tem espaços, use %20 -->
+      <source type="image/png"
         srcset="
-          assets/Screenshot from 2025-08-18 21-39-43.png,
-          assets/Screenshot from 2025-08-18 21-39-43.png,
-          assets/Screenshot from 2025-08-18 21-39-43.png"
+          assets/Screenshot from 2025-08-18 21-39-43.png 1280w,
+          assets/Screenshot from 2025-08-18 21-39-43.png 1920w,
+          assets/Screenshot from 2025-08-18 21-39-43.png 2560w"
         sizes="100vw" />
-      <!-- JPEG/PNG fallback (opcional) -->
       <img id="bgImg"
         src="assets/Screenshot from 2025-08-18 21-39-43.png"
-        alt=""
-        loading="eager"
-        decoding="async" />
+        alt="" loading="eager" decoding="async" />
     </picture>
     <div class="bg-veil"></div>
   </div>
 
-  <div class="container">
-    <header role="banner" aria-label="Cabeçalho do site">
-      <a class="brand" href="./" aria-label="Solara — Assistente Repsol">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-title">Solara • Assistente Repsol</span>
-      </a>
-      <span aria-label="Status do serviço" style="display:flex;align-items:center;gap:8px;color:#9ee6b1;">
-        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="5" fill="#29e17e"/></svg>
-        Online
-      </span>
-    </header>
+  <div class="page">
+    <div class="container">
+      <header role="banner" aria-label="Cabeçalho do site">
+        <a class="brand" href="./" aria-label="Solara — Assistente Repsol">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-title">Solara • Assistente Repsol</span>
+        </a>
+        <span aria-label="Status do serviço" style="display:flex;align-items:center;gap:8px;color:#9ee6b1;">
+          <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="5" fill="#29e17e"/></svg>
+          Online
+        </span>
+      </header>
 
-    <main id="app" role="main">
-      <section class="hero" aria-label="Apresentação">
-        <h1>Converse com a Solara</h1>
-        <p>
-          Assistente conversacional da Repsol para dúvidas sobre óleos, lubrificantes e fluidos — carros, motos, veículos pesados e EV — além de informações institucionais. Clique no botão no canto inferior direito para iniciar.
-        </p>
-        <div class="chip-row" aria-label="Áreas de suporte">
-          <span class="chip">Especificações OEM</span>
-          <span class="chip">ACEA / API / ILSAC</span>
-          <span class="chip">Low-SAPS & DPF</span>
-          <span class="chip">Fluidos EV</span>
-          <span class="chip">Catálogos oficiais</span>
-        </div>
-      </section>
-    </main>
+      <main id="app" role="main">
+        <section class="hero" aria-label="Apresentação">
+          <h1>Converse com a Solara</h1>
+          <p>
+            Solara, uma atendente técnica confiável e eficiente da Repsol. Especialista em óleos, lubrificantes e fluidos automotivos (carros de passeio, motos, veículos pesados e EV), e também em dúvidas institucionais (história, estrutura, sustentabilidade).
+          </p>
+          <div class="chip-row" aria-label="Áreas de suporte">
+            <span class="chip">Especificações OEM</span>
+            <span class="chip">ACEA / API / ILSAC</span>
+            <span class="chip">Low-SAPS & DPF</span>
+            <span class="chip">Fluidos EV</span>
+            <span class="chip">Catálogos oficiais</span>
+          </div>
+        </section>
+      </main>
+    </div>
 
-    <footer role="contentinfo">
-      <span>© <span id="year"></span> Repsol • Projeto demonstrativo</span>
-      <span>Privacidade: o uso do widget segue os termos da ElevenLabs.</span>
+    <!-- Rodapé fixado no pé da página -->
+    <footer class="footer-wrap" role="contentinfo">
+      <div class="container footer-content">
+        <span>© <span id="year"></span> Repsol • Projeto demonstrativo</span>
+        <span>Solara: Assistente Conversacional Respol AI</span>
+      </div>
     </footer>
   </div>
 
